@@ -1,16 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-/* Premium theme definitions and visual custom overrides */
+/* Premium enterprise theme definitions and visual custom overrides */
 :root {
   --color-primary-glow: rgba(139, 92, 246, 0.15);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-border: #f1f5f9;
+}
+
+.dark {
+  --background: #050816;
+  --foreground: #f8fafc;
+  --card: #0b1020;
+  --card-border: rgba(255, 255, 255, 0.05);
 }
 
 /* Main transitions and smooth blending of elements */
@@ -147,3 +161,178 @@ body {
   animation: shimmer 2.5s infinite;
   content: '';
 }
+
+/* Fail-safe system-wide high contrast dark mode mappings */
+.dark {
+  background-color: #050816 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .bg-white {
+  background-color: #0b1020 !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #050816 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-slate-200 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-slate-300 {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-slate-550, 
+.dark .bg-slate-50\/50, 
+.dark .bg-slate-50\/30 {
+  background-color: rgba(11, 16, 32, 0.45) !important;
+}
+
+.dark .text-slate-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-805,
+.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-705,
+.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-650, 
+.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-500 {
+  color: #64748b !important;
+}
+
+.dark .text-zinc-600 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-zinc-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-zinc-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-zinc-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .border-slate-100, 
+.dark .border-slate-150, 
+.dark .border-slate-200, 
+.dark .border-slate-250 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .divide-slate-100 > * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .divide-slate-200 > * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark input, 
+.dark select, 
+.dark textarea {
+  background-color: #0b1020 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark input::placeholder, 
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Specific component fixes */
+.dark #nexus-workspace-grid {
+  background-color: #050816 !important;
+}
+
+.dark header {
+  background-color: rgba(11, 16, 32, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Translucent tinted badges for dark mode */
+.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+.dark .text-emerald-800, 
+.dark .text-emerald-700,
+.dark .text-emerald-650 {
+  color: #34d399 !important;
+}
+
+.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.12) !important;
+}
+.dark .text-rose-800, 
+.dark .text-rose-700, 
+.dark .text-rose-650 {
+  color: #fb7185 !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+.dark .text-indigo-800, 
+.dark .text-indigo-700, 
+.dark .text-indigo-650 {
+  color: #818cf8 !important;
+}
+
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+.dark .text-amber-800, 
+.dark .text-amber-700, 
+.dark .text-amber-650 {
+  color: #fbbf24 !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+.dark .text-blue-800, 
+.dark .text-blue-700, 
+.dark .text-blue-650 {
+  color: #60a5fa !important;
+}
+
+.dark .bg-violet-50 {
+  background-color: rgba(139, 92, 246, 0.12) !important;
+}
+.dark .text-violet-800, 
+.dark .text-violet-700, 
+.dark .text-violet-650 {
+  color: #c084fc !important;
+}
+
+.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.12) !important;
+}
+.dark .text-purple-800, 
+.dark .text-purple-700, 
+.dark .text-purple-650 {
+  color: #d8b4fe !important;
+}
+
+
