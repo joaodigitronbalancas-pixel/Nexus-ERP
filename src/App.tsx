@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Building2,
   Users,
@@ -24,7 +24,7 @@ import {
   AlertTriangle,
   FolderLock,
   Unlock,
-  Lock
+  Lock as LucideLock
 } from "lucide-react";
 
 import {
@@ -90,7 +90,110 @@ import IASection from "./components/sections/IASection";
 import DashboardExecutivoIA from "./components/sections/DashboardExecutivoIA";
 import NexusAICopilot from "./components/NexusAICopilot";
 
+// --- SAAS PREMIUM ENTERPRISE MODERN LOGO ---
+export const NexusPremiumLogo = ({ size = "md", animate = true }: { size?: "sm" | "md" | "lg"; animate?: boolean }) => {
+  const sizeClasses = {
+    sm: "h-8 w-8 text-sm",
+    md: "h-11 w-11 text-lg",
+    lg: "h-14 w-14 text-2xl"
+  };
+
+  return (
+    <div className="relative group cursor-pointer flex items-center justify-center">
+      {/* Outer spinning metallics purple energetic backdrop glow */}
+      {animate && (
+        <div className="absolute -inset-1 blur bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 opacity-60 group-hover:opacity-100 group-hover:duration-250 duration-700 animate-pulse-slow rounded-xl"></div>
+      )}
+      
+      {/* Chrome bezel shell */}
+      <div className={`relative ${sizeClasses[size]} rounded-xl bg-gradient-to-b from-slate-900 via-slate-950 to-indigo-950 border border-violet-550/30 flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),0_8px_16px_rgba(109,40,217,0.3)] transition-all duration-300 group-hover:scale-105 group-hover:border-violet-400/60 overflow-hidden`}>
+        {/* Metallic reflex shine highlight */}
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-t-xl"></div>
+        
+        {/* Dynamic backdrop grid */}
+        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#8c70e312_1px,transparent_1px),linear-gradient(to_bottom,#8c70e312_1px,transparent_1px)] bg-[size:5px_5px]"></div>
+
+        {/* Abstract "N" geometric symbol built using tech facets style OpenAI / Oracle */}
+        <svg className="w-[55%] h-[55%] relative z-10 select-none drop-shadow-[0_2px_6px_rgba(168,85,247,0.5)]" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logo-grad-1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#A855F7" />
+              <stop offset="50%" stopColor="#7C3AED" />
+              <stop offset="100%" stopColor="#6D28D9" />
+            </linearGradient>
+            <linearGradient id="logo-grad-2" x1="32" y1="0" x2="0" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#EC4899" />
+              <stop offset="100%" stopColor="#7C3AED" />
+            </linearGradient>
+          </defs>
+          <path d="M6 5H11V27H6V5Z" fill="url(#logo-grad-1)" />
+          <path d="M21 5H26V27H21V5Z" fill="url(#logo-grad-1)" />
+          <path d="M10.5 5.5L21.5 26.5H26L15 5.5H10.5Z" fill="url(#logo-grad-2)" className="mix-blend-lighten" />
+        </svg>
+        
+        {/* Glowing dot */}
+        <span className="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-violet-400 group-hover:bg-fuchsia-400 shadow-[0_0_6px_#a78bfa] transition"></span>
+      </div>
+    </div>
+  );
+};
+
+// --- SAAS PREMIUM INTERACTIVE THEME SWITCHER CONTROLLERS ---
+export const ThemeSwitcher = ({ theme, setTheme }: { theme: "dark" | "light" | "auto"; setTheme: (t: "dark" | "light" | "auto") => void }) => {
+  return (
+    <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-0.5 rounded-xl text-[10px] font-bold shadow-xs">
+      <button
+        onClick={() => setTheme("light")}
+        className={`px-2 py-1 rounded-lg transition-all duration-200 flex items-center gap-1 cursor-pointer ${theme === "light" ? "bg-white text-violet-700 shadow-sm border border-slate-200/50" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+      >
+        <span>☀️</span> <span className="hidden sm:inline">Light</span>
+      </button>
+      <button
+        onClick={() => setTheme("dark")}
+        className={`px-2 py-1 rounded-lg transition-all duration-200 flex items-center gap-1 cursor-pointer ${theme === "dark" ? "bg-violet-600 text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+      >
+        <span>🌙</span> <span className="hidden sm:inline">Dark</span>
+      </button>
+      <button
+        onClick={() => setTheme("auto")}
+        className={`px-2 py-1 rounded-lg transition-all duration-200 flex items-center gap-1 cursor-pointer ${theme === "auto" ? "bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+      >
+        <span>🖥️</span> <span className="hidden sm:inline">Auto</span>
+      </button>
+    </div>
+  );
+};
+
 export default function App() {
+  // Premium Enterprise Multi-Tenant Theme Customizer State
+  const [theme, setTheme] = useState<"dark" | "light" | "auto">(() => {
+    return (localStorage.getItem("nexus_theme") as any) || "dark";
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    
+    const applyTheme = (mode: "dark" | "light" | "auto") => {
+      if (mode === "auto") {
+        const wantsDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        root.classList.add(wantsDark ? "dark" : "light");
+      } else {
+        root.classList.add(mode);
+      }
+    };
+
+    applyTheme(theme);
+    localStorage.setItem("nexus_theme", theme);
+
+    if (theme === "auto") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const onChange = () => applyTheme("auto");
+      mediaQuery.addEventListener("change", onChange);
+      return () => mediaQuery.removeEventListener("change", onChange);
+    }
+  }, [theme]);
+
   // Database States loaded reactively from client LocalStorage
   const [empresas, setEmpresas] = useState<Empresa[]>(() => getLocalData("companies", EMPRESAS_INICIAIS));
   const [planos, setPlanos] = useState<Plano[]>(() => getLocalData("plans", PLANOS_INICIAIS));
@@ -728,46 +831,54 @@ export default function App() {
   const allowedTabs = activePlan ? activePlan.modules : [];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-indigo-100 antialiased relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#050816] text-slate-800 dark:text-slate-100 font-sans selection:bg-violet-500/30 selection:text-white antialiased relative transition-colors duration-350">
       {/* Visual background gradient accent */}
-      <div className="absolute top-0 inset-x-0 h-48 bg-linear-to-b from-indigo-50/50 to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-violet-550/10 dark:from-purple-950/20 via-transparent to-transparent pointer-events-none" />
 
       {/* LOGIN VIEW PANEL */}
       {!loggedInUser ? (
-        <div className="min-h-screen flex items-center justify-center p-4 relative z-10 animate-fade-in font-sans">
-          <div className="max-w-md w-full bg-white border border-slate-150 rounded-3xl overflow-hidden shadow-xl p-8 space-y-6">
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
-                <Sliders size={24} />
+        <div className="min-h-screen flex items-center justify-center p-4 relative z-10 animate-fade-in font-sans bg-slate-950 selection:bg-indigo-500/30 selection:text-white overflow-hidden">
+          {/* Subtle neon glowing backdrops */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-3xl overflow-hidden shadow-2xl p-8 space-y-6 relative">
+            <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent"></div>
+            
+            <div className="text-center space-y-4">
+              <div className="flex justify-center">
+                <NexusPremiumLogo size="lg" />
               </div>
-              <h1 className="text-2xl font-black tracking-tight text-slate-900 font-sans">Nexus ERP Multitenante</h1>
-              <p className="text-xs text-slate-400">Ambiente integrado comercial, contábil e industrial SaaS.</p>
+              <div>
+                <h1 className="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-100 font-display uppercase">Nexus ERP</h1>
+                <p className="text-[10px] text-violet-300 font-mono tracking-widest uppercase mt-1">Ambiente Integrado SaaS Multitenant</p>
+              </div>
             </div>
 
             {authError && (
-              <div className="p-3 bg-rose-50 border border-rose-100 text-rose-800 text-xs rounded-xl flex items-start gap-2 animate-pulse-slow">
-                <AlertTriangle size={16} className="shrink-0 text-rose-600 mt-0.5" />
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs rounded-xl flex items-start gap-2 animate-pulse-slow shadow-lg">
+                <AlertTriangle size={16} className="shrink-0 text-rose-450 mt-0.5" />
                 <p className="leading-normal">{authError}</p>
               </div>
             )}
 
             <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs font-semibold">
               <div className="space-y-1">
-                <label className="text-slate-500 font-bold">Identificação Usuário / Log (*)</label>
+                <label className="text-indigo-300 font-bold">Identificação Usuário / Log (*)</label>
                 <input
                   type="text"
                   required
                   value={loginUsername}
                   onChange={(e) => setLoginUsername(e.target.value)}
                   placeholder="Ex: admin ou antonio.alfa..."
-                  className="w-full p-3 border border-slate-200 bg-slate-50 focus:bg-white rounded-xl text-sm focus:outline-hidden text-slate-800"
+                  className="w-full p-3 border border-slate-800 bg-slate-950/60 rounded-xl text-sm focus:outline-hidden text-slate-105 placeholder:text-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-550/20"
                 />
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-slate-400">
-                  <label className="text-slate-500 font-bold">Senha de Controle (*)</label>
-                  <span>MFA Ativado</span>
+                <div className="flex justify-between items-center text-slate-550">
+                  <label className="text-indigo-300 font-bold">Senha de Controle (*)</label>
+                  <span className="text-[10px] text-indigo-400">MFA Ativado</span>
                 </div>
                 <input
                   type="password"
@@ -775,60 +886,64 @@ export default function App() {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   placeholder="Senha mestre padrão: admin123"
-                  className="w-full p-3 border border-slate-200 bg-slate-50 focus:bg-white rounded-xl text-sm focus:outline-hidden text-slate-800"
+                  className="w-full p-3 border border-slate-800 bg-slate-950/60 rounded-xl text-sm focus:outline-hidden text-slate-105 placeholder:text-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-550/20"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 font-sans text-white font-bold rounded-xl text-sm shadow-md cursor-pointer transition relative"
+                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 font-sans text-white font-bold rounded-xl text-sm shadow-[0_0_15px_rgba(99,102,241,0.25)] hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] cursor-pointer transition relative active:scale-98"
               >
                 Autenticar Tenant Nexus
               </button>
             </form>
 
-            <div className="border-t pt-5 space-y-3">
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block text-center">Contas de Demonstração de Teste:</span>
+            <div className="border-t border-slate-800/80 pt-5 space-y-3">
+              <span className="text-[10px] text-indigo-300/60 font-bold uppercase tracking-wider block text-center">Contas de Demonstração de Teste:</span>
               <div className="grid grid-cols-2 gap-2 text-[10px]">
                 <button
+                  type="button"
                   onClick={() => {
                     setLoginUsername("admin");
                     setLoginPassword("admin123");
                   }}
-                  className="p-2.5 border rounded-xl hover:bg-slate-50 text-left cursor-pointer transition"
+                  className="p-2.5 border border-slate-800/80 bg-slate-950/30 text-white rounded-xl hover:bg-indigo-600/10 hover:border-indigo-500/40 text-left cursor-pointer transition active:scale-98 hover:shadow-[0_0_8px_rgba(99,102,241,0.1)]"
                 >
-                  <p className="font-extrabold text-slate-900">⚡ SUPER ADMIN</p>
-                  <p className="text-slate-400 font-mono">admin / admin123</p>
+                  <p className="font-extrabold text-white flex items-center gap-1">⚡ <span className="text-indigo-300">SUPER ADMIN</span></p>
+                  <p className="text-slate-500 font-mono">admin / admin123</p>
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setLoginUsername("antonio.alfa");
                     setLoginPassword("admin123");
                   }}
-                  className="p-2.5 border rounded-xl hover:bg-slate-50 text-left cursor-pointer transition"
+                  className="p-2.5 border border-slate-800/80 bg-slate-950/30 text-white rounded-xl hover:bg-indigo-600/10 hover:border-indigo-500/40 text-left cursor-pointer transition active:scale-98 hover:shadow-[0_0_8px_rgba(99,102,241,0.1)]"
                 >
-                  <p className="font-extrabold text-slate-950">⚙️ Metalúrgica Alfa (Ativa)</p>
-                  <p className="text-slate-450 font-mono">antonio.alfa / admin123</p>
+                  <p className="font-extrabold text-slate-200">⚙️ Metalúrgica Alfa</p>
+                  <p className="text-slate-500 font-mono">antonio.alfa / admin123</p>
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setLoginUsername("carlos.global");
                     setLoginPassword("admin123");
                   }}
-                  className="p-2.5 border rounded-xl hover:bg-slate-50 text-left cursor-pointer transition"
+                  className="p-2.5 border border-slate-800/80 bg-slate-950/30 text-white rounded-xl hover:bg-indigo-600/10 hover:border-indigo-500/40 text-left cursor-pointer transition active:scale-98 hover:shadow-[0_0_8px_rgba(99,102,241,0.1)]"
                 >
-                  <p className="font-extrabold text-slate-900">🍏 Global Alimentos (Ativa)</p>
-                  <p className="text-slate-400 font-mono">carlos.global / admin123</p>
+                  <p className="font-extrabold text-slate-200">🍏 Global Alimentos</p>
+                  <p className="text-slate-500 font-mono">carlos.global / admin123</p>
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setLoginUsername("bruno.fin");
                     setLoginPassword("admin123");
                   }}
-                  className="p-2.5 border rounded-xl hover:bg-slate-50 text-left cursor-pointer transition"
+                  className="p-2.5 border border-slate-800/80 bg-slate-950/30 text-white rounded-xl hover:bg-indigo-600/10 hover:border-indigo-500/40 text-left cursor-pointer transition active:scale-98 hover:shadow-[0_0_8px_rgba(99,102,241,0.1)]"
                 >
-                  <p className="font-extrabold text-slate-900">💰 Cel. Financeira Alfa</p>
-                  <p className="text-slate-400 font-mono">bruno.fin / admin123</p>
+                  <p className="font-extrabold text-slate-200">💰 Cel. Financeira</p>
+                  <p className="text-slate-500 font-mono">bruno.fin / admin123</p>
                 </button>
               </div>
             </div>
@@ -1149,48 +1264,49 @@ export default function App() {
               <div id="nexus-workspace-grid">
                 
                 {/* Header Nav bar */}
-                <header className="bg-slate-900 text-white shadow-md">
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-9 h-9 bg-linear-to-tr from-indigo-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-black animate-pulse-slow">
-                        N
-                      </div>
+                <header className="sticky top-0 z-30 bg-white/75 dark:bg-[#0B1020]/70 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 shadow-xs transition-colors duration-300">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <NexusPremiumLogo size="sm" />
                       <div>
-                        <div className="flex items-center gap-1.5">
-                          <h1 className="text-base font-black tracking-tight font-sans leading-none">Nexus ERP</h1>
+                        <div className="flex items-center gap-2">
+                          <h1 className="text-sm font-black tracking-wider font-display text-slate-900 dark:text-white uppercase leading-none">Nexus ERP</h1>
                           {isSimulationActive && (
-                            <span className="px-2 py-0.5 rounded-full text-[8px] font-extrabold bg-rose-600 text-white uppercase tracking-widest leading-none">
+                            <span className="px-2 py-0.5 rounded-full text-[8px] font-black bg-rose-600 text-white uppercase tracking-wider leading-none shadow-[0_0_10px_rgba(225,29,72,0.3)]">
                               Simulador
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] text-slate-400 font-mono">
-                          Plano: {isSimulationActive ? `Simulado (${activePlan?.nome || "Professional"})` : loggedInUser.nivel === "SuperAdmin" ? "SaaS Master Proprietário" : activePlan?.nome || "Básico"}
+                        <p className="text-[9px] text-zinc-500 dark:text-violet-300 font-mono mt-0.5 uppercase tracking-wider">
+                          Plano: {isSimulationActive ? `Simulado (${activePlan?.nome || "Professional"})` : loggedInUser.nivel === "SuperAdmin" ? "SaaS Master" : activePlan?.nome || "Básico"}
                         </p>
                       </div>
                     </div>
 
                     {/* Company active tenant name */}
                     {activeCompany && (
-                      <div className="hidden md:flex items-center gap-1.5 bg-indigo-950/60 border border-indigo-800/40 p-2 py-1 rounded-full text-xs text-indigo-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                        <strong>Tenant: {activeCompany.nome}</strong>
+                      <div className="hidden md:flex items-center gap-2 bg-violet-50 dark:bg-violet-950/40 border border-violet-100 dark:border-violet-900/30 p-2 py-1 rounded-full text-xs text-violet-700 dark:text-violet-300 shadow-[inset_0_1px_2px_rgba(109,40,217,0.05)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-ping" />
+                        <span className="font-bold">Tenant: {activeCompany.nome}</span>
                       </div>
                     )}
 
                     <div className="flex items-center gap-4">
+                      {/* Interactive Theme Customizer Switch */}
+                      <ThemeSwitcher theme={theme} setTheme={setTheme} />
+
                       <div className="text-right hidden sm:block leading-tight text-xs font-sans">
-                        <p className="font-extrabold text-white flex items-center gap-1.5 justify-end">
+                        <p className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 justify-end">
                           {isSimulationActive ? virtualUser.nome : loggedInUser.nome}
                         </p>
-                        <p className="text-[10px] text-zinc-400">
+                        <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-mono">
                           {isSimulationActive ? `${virtualUser.departamento} | Simulado` : loggedInUser.departamento || "SaaS Operator"}
                         </p>
                       </div>
 
                       <button
                         onClick={handleLogout}
-                        className="p-1 px-3 bg-white/5 border border-white/10 rounded-lg hover:bg-rose-600 hover:text-white transition cursor-pointer text-xs flex items-center gap-1.5 font-bold"
+                        className="p-1.5 px-3 bg-slate-100 hover:bg-rose-500/10 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl hover:border-rose-500/30 text-slate-700 dark:text-slate-300 hover:text-rose-500 transition-all cursor-pointer text-xs flex items-center gap-1.5 font-bold"
                       >
                         <LogOut size={13} /> Sair
                       </button>
@@ -1229,27 +1345,27 @@ export default function App() {
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
                       
                       {/* Left Sidebar Menu */}
-                      <div className="lg:col-span-1 bg-white border border-slate-150 rounded-3xl p-4 space-y-3 shadow-sm">
-                        <div className="pb-2 border-b flex items-center justify-between">
-                          <span className="text-[11px] font-extrabold text-slate-800 tracking-wider uppercase block">Navegação Permitida</span>
-                          <span className="text-[9px] bg-slate-100 p-0.5 px-2 rounded-full font-mono font-bold">{virtualUser.nivel}</span>
+                      <div className="lg:col-span-1 bg-white/70 dark:bg-[#111827]/70 backdrop-blur-md border border-slate-205 dark:border-white/5 rounded-3xl p-4.5 space-y-4 shadow-sm dark:shadow-2xl transition-all duration-300">
+                        <div className="pb-3 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+                          <span className="text-[11px] font-black text-slate-800 dark:text-slate-100 tracking-wider uppercase block font-display">Navegação Permitida</span>
+                          <span className="text-[9px] bg-slate-100 dark:bg-violet-955/30 text-slate-700 dark:text-violet-300 p-1 px-2.5 rounded-full font-mono font-black border border-slate-200/40 dark:border-violet-500/10 uppercase tracking-wider">{virtualUser.nivel}</span>
                         </div>
                         
                         <div className="space-y-1 text-xs">
                           {/* Tab: Dashboard Executivo */}
                           <button
                             onClick={() => setActiveClientTab("Dashboard Executivo")}
-                            className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                            className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                               activeClientTab === "Dashboard Executivo"
-                                ? "bg-slate-900 text-white shadow-md"
-                                : "text-indigo-800 bg-indigo-50/40 hover:bg-indigo-50"
+                                ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                : "text-violet-750 dark:text-violet-300 bg-violet-500/5 dark:bg-violet-500/10 hover:bg-violet-500/10 dark:hover:bg-violet-500/15"
                             }`}
                           >
                             <span className="flex items-center gap-2">
                               <span>👑 Dashboard Executivo IA</span>
-                              <span className="text-[7px] bg-indigo-600 text-white font-mono px-1 rounded animate-pulse">Enterprise</span>
+                              <span className="text-[7px] bg-violet-600 dark:bg-violet-500 text-white font-mono px-1.5 py-0.5 rounded animate-pulse">Enterprise</span>
                             </span>
-                            <ChevronRight size={13} className="opacity-40" />
+                            <ChevronRight size={13} className="opacity-60" />
                           </button>
 
                           {/* Tab: Administrativo */}
@@ -1258,17 +1374,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Administrativo")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Administrativo"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-350 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>💼 Administrativo</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-50 border border-rose-100 text-rose-600 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1279,17 +1395,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("RH")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "RH"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>👥 Recursos Humanos</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-550/10 text-rose-500 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1300,17 +1416,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Financeiro")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Financeiro"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>💵 Financeiro & Caixa</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-550/10 text-rose-500 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1321,17 +1437,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Faturamento")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Faturamento"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>🧾 Faturamento Fiscal</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-550/10 text-rose-500 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1342,17 +1458,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Industrial")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Industrial"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>🏭 PCP & Industrial</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-50 border border-rose-100 text-rose-600 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1363,17 +1479,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Comercial")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Comercial"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>📈 Comercial CRM</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-50 border border-rose-100 text-rose-600 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1383,14 +1499,14 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Chat")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Chat"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span>💬 Chat Interno</span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1401,17 +1517,17 @@ export default function App() {
                             return (
                               <button
                                 onClick={() => setActiveClientTab("Seguranca")}
-                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                                className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                   activeClientTab === "Seguranca"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-650 hover:bg-slate-50"
+                                    ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                    : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                                 }`}
                               >
                                 <span className="flex items-center gap-2">
                                   <span>🛡️ Segurança & Auditoria</span>
-                                  {!acc.allowed && <span className="text-[8px] bg-rose-50 border border-rose-100 text-rose-600 rounded px-1 flex items-center gap-0.5"><Lock size={8} /> Bloqueado</span>}
+                                  {!acc.allowed && <span className="text-[8px] bg-rose-500/10 text-rose-500 dark:text-rose-400 rounded px-1.5 py-0.5 flex items-center gap-0.5 border border-rose-500/10"><LucideLock size={8} /> Bloqueado</span>}
                                 </span>
-                                <ChevronRight size={13} className="opacity-40" />
+                                <ChevronRight size={13} className="opacity-60" />
                               </button>
                             );
                           })()}
@@ -1420,26 +1536,28 @@ export default function App() {
                           {activePlan?.iaLiberada && (
                             <button
                               onClick={() => setActiveClientTab("IA")}
-                              className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                              className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
                                 activeClientTab === "IA"
-                                  ? "bg-slate-900 text-white shadow-md"
-                                  : "text-indigo-850 hover:bg-indigo-50/40"
+                                  ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                  : "text-violet-750 dark:text-violet-300 bg-violet-500/5 dark:bg-violet-500/10 hover:bg-violet-500/10 dark:hover:bg-violet-500/15"
                               }`}
                             >
                               <span className="flex items-center gap-1">✨ Nexus AI Copilot</span>
-                              <ChevronRight size={13} className="opacity-40" />
+                              <ChevronRight size={13} className="opacity-60" />
                             </button>
                           )}
 
                           {/* Tab: Suporte */}
                           <button
                             onClick={() => setActiveClientTab("Suporte")}
-                            className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
-                              activeClientTab === "Suporte" ? "bg-slate-900 text-white shadow-md" : "text-slate-650 hover:bg-slate-50"
+                            className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition-all duration-200 cursor-pointer text-left ${
+                              activeClientTab === "Suporte"
+                                ? "purple-metallic-gradient text-white purple-metallic-glow"
+                                : "text-slate-650 dark:text-slate-355 hover:bg-slate-100 dark:hover:bg-white/5"
                             }`}
                           >
                             <span>🛠️ Suporte Técnico</span>
-                            <ChevronRight size={13} className="opacity-40" />
+                            <ChevronRight size={13} className="opacity-60" />
                           </button>
                         </div>
                       </div>

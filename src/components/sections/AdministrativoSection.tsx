@@ -13,7 +13,7 @@ import {
   Search,
   Plus,
   Trash2,
-  Lock,
+  Lock as LucideLock,
   Stamp,
   Globe,
   GitBranch,

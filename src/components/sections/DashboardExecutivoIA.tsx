@@ -102,7 +102,7 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
   };
 
   return (
-    <div id="executive-ai-dashboard" className="p-0.5 space-y-6 text-slate-900 font-sans">
+    <div id="executive-ai-dashboard" className="p-0.5 space-y-6 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
       
       {/* Toast Overlay Notifications */}
       <div className="fixed top-20 right-6 z-50 pointer-events-none space-y-2">
@@ -111,7 +111,7 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
             key={t.id}
             className="p-4 bg-slate-950/95 backdrop-blur-md border border-indigo-500/30 rounded-2xl shadow-2xl flex items-start gap-3 pointer-events-auto animate-slide-in w-80 text-white"
           >
-            <div className="p-1.5 bg-indigo-505 bg-indigo-500/10 border border-indigo-400/20 text-indigo-400 rounded-lg">
+            <div className="p-1.5 bg-indigo-500/10 border border-indigo-400/20 text-indigo-400 rounded-lg">
               <Zap size={15} className="animate-pulse" />
             </div>
             <div className="flex-1 space-y-0.5">
@@ -121,15 +121,15 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
           </div>
         ))}
       </div>
-
+ 
       {/* Futuristic Banner with Glow Elements */}
-      <div className="p-6 bg-gradient-to-r from-slate-950 to-indigo-950/90 rounded-3xl border border-slate-800 relative z-10 overflow-hidden text-white flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-xl">
-        <div className="absolute top-0 right-0 h-40 w-40 bg-purple-500/10 blur-[90px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-10 h-32 w-32 bg-indigo-505 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none" />
-
+      <div className="p-6 bg-gradient-to-r from-slate-950 via-[#0B1020] to-indigo-955 rounded-3xl border border-slate-800/80 relative z-10 overflow-hidden text-white flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-xl">
+        <div className="absolute top-0 right-0 h-40 w-40 bg-purple-500/12 blur-[90px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-10 h-32 w-32 bg-indigo-500/12 blur-[80px] rounded-full pointer-events-none" />
+ 
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="p-1 px-2.5 bg-purple-500/20 border border-purple-400/30 text-purple-300 font-mono text-[9px] rounded-full font-black animate-pulse uppercase tracking-widest">
+            <span className="p-0.5 px-2.5 bg-purple-550/20 border border-purple-400/30 text-purple-300 font-mono text-[9px] rounded-full font-black animate-pulse uppercase tracking-widest">
               Nexus AI Control Tower
             </span>
           </div>
@@ -140,14 +140,14 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
             Console geral de faturamento, duplicatas, PCP, segurança e workflows operacionais com IA.
           </p>
         </div>
-
+ 
         {/* Realtime Stream Switcher */}
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={() => setRealtimeActive(!realtimeActive)}
             className={`p-2 px-4 rounded-xl font-black text-xs transition duration-200 cursor-pointer flex items-center gap-2 border-2 ${
               realtimeActive
-                ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400/90 hover:bg-emerald-500/20"
+                ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400/95 hover:bg-emerald-500/20"
                 : "bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-700"
             }`}
           >
@@ -156,13 +156,15 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
           </button>
         </div>
       </div>
-
+ 
       {/* Exec navigation level tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/60 pb-1.5 text-xs font-bold text-slate-500">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/60 dark:border-white/5 pb-1.5 text-xs font-bold text-slate-500">
         <button
           onClick={() => setActiveSubTab("overview")}
-          className={`p-2 px-4 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-            activeSubTab === "overview" ? "bg-slate-900 text-white shadow-xs" : "hover:bg-slate-100"
+          className={`p-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === "overview" 
+              ? "purple-metallic-gradient text-white purple-metallic-glow font-black" 
+              : "text-slate-650 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
           }`}
         >
           <BarChart3 size={14} /> Vista Geral Executiva
@@ -170,35 +172,43 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
         
         <button
           onClick={() => setActiveSubTab("workflows")}
-          className={`p-2 px-4 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-            activeSubTab === "workflows" ? "bg-slate-900 text-white shadow-xs" : "hover:bg-slate-100"
+          className={`p-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === "workflows" 
+              ? "purple-metallic-gradient text-white purple-metallic-glow font-black" 
+              : "text-slate-650 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
           }`}
         >
           <CheckSquare size={14} /> Fluxo Multínivel de Despachos
         </button>
-
+ 
         <button
           onClick={() => setActiveSubTab("automations")}
-          className={`p-2 px-4 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-            activeSubTab === "automations" ? "bg-slate-900 text-white shadow-xs" : "hover:bg-slate-100"
+          className={`p-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === "automations" 
+              ? "purple-metallic-gradient text-white purple-metallic-glow font-black" 
+              : "text-slate-650 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
           }`}
         >
           <Zap size={14} /> Central de Automações
         </button>
-
+ 
         <button
           onClick={() => setActiveSubTab("telemetry")}
-          className={`p-2 px-4 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-            activeSubTab === "telemetry" ? "bg-slate-900 text-white shadow-xs" : "hover:bg-slate-100"
+          className={`p-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === "telemetry" 
+              ? "purple-metallic-gradient text-white purple-metallic-glow font-black" 
+              : "text-slate-650 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
           }`}
         >
-          <Activity size={14} /> Telemetria de Sistemas Sandbox
+          <Activity size={14} /> Telemetria Sandbox
         </button>
-
+ 
         <button
           onClick={() => setActiveSubTab("apps")}
-          className={`p-2 px-4 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-            activeSubTab === "apps" ? "bg-slate-900 text-white shadow-xs" : "hover:bg-slate-100"
+          className={`p-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === "apps" 
+              ? "purple-metallic-gradient text-white purple-metallic-glow font-black" 
+              : "text-slate-650 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
           }`}
         >
           <LayoutGrid size={14} /> Marketplace de Conectores
@@ -207,67 +217,67 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
 
       {/* Sub tabs execution areas */}
       {activeSubTab === "overview" && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-fade-in">
           
           {/* Executive KPI Stats Indicators */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <div className="p-4 bg-white border border-slate-200/80 rounded-2xl flex items-center justify-between shadow-xs hover:border-slate-300 transition duration-200">
+            <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 dark:hover:border-violet-500/20 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5">
               <div className="space-y-1">
-                <span className="text-[10px] text-zinc-400 font-mono font-bold uppercase tracking-wider block">Fluxo de Caixa Limite</span>
-                <p className={`text-xl font-bold ${cashProjection < 15 ? "text-rose-600 animate-pulse" : "text-amber-500"}`}>
+                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono font-black uppercase tracking-wider block">Fluxo de Caixa Limite</span>
+                <p className={`text-xl font-black ${cashProjection < 15 ? "text-rose-600 dark:text-rose-400 animate-pulse" : "text-amber-500 dark:text-amber-400"}`}>
                   {cashProjection} Dias Restantes
                 </p>
-                <span className="text-[9px] text-slate-500 font-sans block flex items-center gap-1">
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 font-sans block flex items-center gap-1">
                   <TrendingDown size={11} className="text-rose-500" /> Baixa liquidez simulada
                 </span>
               </div>
-              <div className="p-3 bg-rose-50 text-rose-600 rounded-xl">
+              <div className="p-3 bg-rose-50 dark:bg-rose-500/10 text-rose-650 dark:text-rose-400 rounded-xl transition duration-300 group-hover:scale-105">
                 <AlertOctagon size={18} />
               </div>
             </div>
 
-            <div className="p-4 bg-white border border-slate-200/80 rounded-2xl flex items-center justify-between shadow-xs hover:border-slate-300 transition duration-200">
+            <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 dark:hover:border-violet-500/20 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5">
               <div className="space-y-1">
-                <span className="text-[10px] text-zinc-400 font-mono font-bold uppercase tracking-wider block">Eficiência OEE PCP CNC</span>
-                <p className="text-xl font-bold text-slate-800">
-                  {81.2}% (Setup de Lote)
+                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono font-black uppercase tracking-wider block">Eficiência OEE PCP CNC</span>
+                <p className="text-xl font-black text-slate-800 dark:text-white">
+                  78.5% <span className="text-xs font-mono font-normal text-slate-400 dark:text-slate-500">(Lote Mazak)</span>
                 </p>
-                <span className="text-[9px] text-slate-500 font-sans block flex items-center gap-1">
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 font-sans block flex items-center gap-1">
                   <TrendingDown size={11} className="text-rose-500" /> Perda de {productionDrop}% de tempo
                 </span>
               </div>
-              <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
+              <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-650 dark:text-amber-405 rounded-xl transition duration-300 group-hover:scale-105">
                 <TrendingDown size={18} />
               </div>
             </div>
 
-            <div className="p-4 bg-white border border-slate-200/80 rounded-2xl flex items-center justify-between shadow-xs hover:border-slate-300 transition duration-200">
+            <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 dark:hover:border-violet-500/20 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5">
               <div className="space-y-1">
-                <span className="text-[10px] text-zinc-400 font-mono font-bold uppercase tracking-wider block">Previsão DRE Ebitda</span>
-                <p className="text-xl font-bold text-emerald-600">
+                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono font-black uppercase tracking-wider block">Previsão DRE Ebitda</span>
+                <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">
                   + 24.8% Projetado
                 </p>
-                <span className="text-[9px] text-emerald-600 font-sans block flex items-center gap-1">
+                <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-sans block flex items-center gap-1">
                   <TrendingUp size={11} /> Margem saudável
                 </span>
               </div>
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 rounded-xl transition duration-300 group-hover:scale-105">
                 <TrendingUp size={18} />
               </div>
             </div>
 
-            <div className="p-4 bg-white border border-slate-200/80 rounded-2xl flex items-center justify-between shadow-xs hover:border-slate-300 transition duration-200">
+            <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 dark:hover:border-violet-500/20 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5">
               <div className="space-y-1">
-                <span className="text-[10px] text-zinc-400 font-mono font-bold uppercase tracking-wider block">Conectores Operantes</span>
-                <p className="text-xl font-bold text-indigo-600">
+                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono font-black uppercase tracking-wider block">Conectores Operantes</span>
+                <p className="text-xl font-black text-violet-600 dark:text-indigo-400">
                   4 Integrados
                 </p>
-                <span className="text-[9px] text-slate-500 font-sans block flex items-center gap-1">
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 font-sans block flex items-center gap-1">
                   Todos em conformidade LGPD
                 </span>
               </div>
-              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+              <div className="p-3 bg-violet-50 dark:bg-violet-500/10 text-violet-650 dark:text-violet-405 rounded-xl transition duration-300 group-hover:scale-105">
                 <Award size={18} />
               </div>
             </div>
@@ -278,13 +288,13 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             {/* Live Alerts list (Left panel) */}
-            <div className="lg:col-span-5 bg-white border border-slate-150 rounded-3xl p-5 space-y-4 shadow-sm">
+            <div className="lg:col-span-5 bg-white/70 dark:bg-[#111827]/75 border border-slate-150 dark:border-white/5 rounded-3xl p-5 space-y-4 shadow-sm dark:shadow-2xl">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-1.5">
                   <AlertOctagon size={16} className="text-rose-500 animate-pulse" />
                   Alertas Críticos & Desvios ({alerts.length})
                 </h3>
-                <span className="text-[9px] bg-slate-100 p-0.5 px-2 rounded-full font-mono text-slate-500">Live Feed</span>
+                <span className="text-[9px] bg-slate-100 dark:bg-slate-800 p-1 px-2.5 rounded-full font-mono text-slate-500 dark:text-slate-400 font-bold border border-slate-200/20">Live Feed</span>
               </div>
 
               <div className="space-y-2 h-[290px] overflow-y-auto pr-1">
@@ -293,18 +303,18 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
                     key={al.id}
                     className={`p-3 border rounded-xl flex items-start gap-2.5 transition text-xs leading-relaxed ${
                       al.type === "critical"
-                        ? "bg-rose-50/60 border-rose-100/80 text-rose-900"
+                        ? "bg-rose-500/5 dark:bg-rose-500/10 border-rose-100 dark:border-rose-500/25 text-rose-900 dark:text-rose-200"
                         : al.type === "warning"
-                        ? "bg-amber-50/60 border-amber-100/80 text-amber-900"
-                        : "bg-blue-50/60 border-blue-100/80 text-blue-900"
+                        ? "bg-amber-550/5 dark:bg-amber-500/10 border-amber-100 dark:border-amber-500/25 text-amber-900 dark:text-amber-200"
+                        : "bg-blue-500/5 dark:bg-blue-500/10 border-blue-100 dark:border-blue-500/25 text-blue-900 dark:text-blue-200"
                     }`}
                   >
                     <span className="text-base shrink-0 mt-0.5">
                       {al.type === "critical" ? "🔴" : al.type === "warning" ? "🟡" : "🔵"}
                     </span>
                     <div className="flex-1 space-y-0.5">
-                      <p className="font-sans text-[11px] font-semibold">{al.text}</p>
-                      <span className="text-[9px] text-slate-400 block font-mono">Disparou: {al.date}</span>
+                      <p className="font-sans text-[11px] font-bold">{al.text}</p>
+                      <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block font-mono">Disparou: {al.date}</span>
                     </div>
                   </div>
                 ))}
@@ -312,7 +322,7 @@ export default function DashboardExecutivoIA({ onAddAuditLog, empresaId, activeC
             </div>
 
             {/* AI Advisor console (Right panel) */}
-            <div className="lg:col-span-7 bg-slate-950 text-white rounded-3xl p-5 space-y-4 shadow-md border border-slate-800 flex flex-col justify-between min-h-[350px]">
+            <div className="lg:col-span-12 xl:col-span-7 bg-slate-950 text-white rounded-3xl p-5 space-y-4 shadow-md border border-slate-800 flex flex-col justify-between min-h-[350px]">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-black text-white text-sm flex items-center gap-1.5">

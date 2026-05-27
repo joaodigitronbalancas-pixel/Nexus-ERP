@@ -1,5 +1,10 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import { AlertTriangle, RefreshCw, Layers, ShieldAlert, Home, Trash2 } from "lucide-react";
+import { AlertTriangle, RotateCcw, ShieldCheck, Database, RefreshCcw } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -11,122 +16,107 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
-export default class ErrorBoundary extends React.Component<Props, State> {
+export default class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
     errorInfo: null
   };
 
-  public static getDerivedStateFromError(error: Error): Partial<State> {
-    return { hasError: true, error };
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error, errorInfo: null };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an untrapped exception:", error, errorInfo);
+    console.error("Uncaught error captured by Nexus ErrorBoundary:", error, errorInfo);
     this.setState({ errorInfo });
   }
 
-  private handleReset = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null
-    });
+  private handleReload = () => {
     window.location.reload();
   };
 
-  private handleClearCache = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null
-    });
-    window.location.reload();
+  private handleResetStorage = () => {
+    if (window.confirm("Atenção: Isso restaurará todos os dados originais de simulação industrial e comercial (limpando o cache local). Deseja continuar?")) {
+      window.localStorage.clear();
+      window.location.reload();
+    }
   };
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans selection:bg-rose-500/30 selection:text-white">
-          {/* Futuristic ambient background glow */}
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute top-2/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-rose-500/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-white">
+          {/* Decorative premium elements */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-indigo-600 to-fuchsia-600 shadow-[0_1px_10px_rgba(99,102,241,0.5)]"></div>
+          
+          <div className="max-w-2xl w-full bg-slate-900/40 backdrop-blur-md rounded-3xl border border-indigo-500/20 p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute -right-16 -top-16 w-32 h-32 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -left-16 -bottom-16 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div className="w-full max-w-2xl bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 md:p-10 shadow-2xl relative z-10 animate-fade-in">
-            {/* Header / Brand status */}
-            <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-widest mb-6">
-              <ShieldAlert className="w-4 h-4 text-rose-500 animate-pulse" />
-              <span>NEXUS ERP OS • Sistema de Recuperação</span>
-            </div>
-
-            {/* Error Title */}
-            <div className="space-y-4">
-              <div className="inline-flex p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl">
-                <AlertTriangle className="w-8 h-8" />
-              </div>
-              <h1 className="text-2xl md:text-3xl font-sans font-bold tracking-tight text-white">
-                Ocorreu uma exceção inesperada
-              </h1>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed">
-                Nossos sub-módulos de segurança capturaram uma desconexão no fluxo de renderização principal. 
-                Sua integridade de dados foi preservada. Veja os detalhes abaixo:
-              </p>
-            </div>
-
-            {/* Diagnostic Logs Panel */}
-            <div className="mt-8 space-y-3">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-500 bg-slate-950/40 p-2 px-3 rounded-lg border border-slate-800/40">
-                <span className="flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                  MÓDULO: RENDERER_ENGINE_CRITICAL
-                </span>
-                <span>UTC {new Date().toISOString().substring(11, 19)}</span>
-              </div>
-
-              <div className="bg-slate-950 border border-slate-800/60 rounded-2xl p-4 md:p-5 font-mono text-xs text-rose-400/90 overflow-x-auto max-h-48 shadow-inner leading-relaxed">
-                <div className="text-rose-500 font-bold mb-1">
-                  [Erro] {this.state.error?.name || "Exception"}: {this.state.error?.message || "Erro desconhecido"}
+            <div className="flex flex-col items-center text-center space-y-6">
+              {/* Shield/Alert Logo */}
+              <div className="relative">
+                <div className="h-16 w-16 bg-rose-500/10 rounded-2xl flex items-center justify-center border border-rose-500/30 text-rose-400 shadow-[0_0_15px_rgba(239,68,68,0.15)]">
+                  <AlertTriangle size={32} className="animate-pulse" />
                 </div>
-                {this.state.error?.stack && (
-                  <pre className="text-[10px] text-slate-500 mt-2 whitespace-pre-wrap leading-normal overflow-y-auto max-h-32">
-                    {this.state.error.stack}
-                  </pre>
-                )}
-                {this.state.errorInfo?.componentStack && (
-                  <pre className="text-[9px] text-slate-600 mt-2 border-t border-slate-900 pt-2 whitespace-pre-wrap leading-normal">
-                    {this.state.errorInfo.componentStack}
-                  </pre>
-                )}
+                <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-slate-900 border border-indigo-500/30 rounded-full flex items-center justify-center text-indigo-400">
+                  <ShieldCheck size={12} />
+                </div>
               </div>
-            </div>
 
-            {/* Action buttons */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={this.handleReset}
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-medium text-sm px-6 py-3.5 rounded-2xl shadow-lg shadow-indigo-550/10 cursor-pointer transition-all duration-200 outline-none focus:ring-2 focus:ring-indigo-400"
-              >
-                <RefreshCw className="w-4 h-4 animate-spin-slow" />
-                Recarregar Sistema
-              </button>
+              {/* Title */}
+              <div className="space-y-2">
+                <span className="text-[10px] uppercase font-mono tracking-widest font-black text-indigo-400 px-2.5 py-1 bg-indigo-500/10 rounded-full border border-indigo-500/20">
+                  Sistema de Redundância Ativo
+                </span>
+                <h1 className="text-2xl font-black tracking-tight text-white font-sans mt-3">
+                  Nexus ERP: Desvio de Runtime Recuperado
+                </h1>
+                <p className="text-slate-400 text-xs max-w-md mx-auto leading-relaxed">
+                  O ambiente detectou uma falha de rendering na UI. O motor corporativo Nexus isolou o erro para proteger a persistência local e integridade de faturamento de filiais.
+                </p>
+              </div>
 
-              <button
-                onClick={this.handleClearCache}
-                className="inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-sm px-6 py-3.5 rounded-2xl cursor-pointer transition-all duration-200 outline-none focus:ring-2 focus:ring-slate-500"
-                title="Limpar todos os dados locais salvos (redefine a simulação)"
-              >
-                <Trash2 className="w-4 h-4" />
-                Limpar Cache Local
-              </button>
-            </div>
+              {/* Diagnostic Box */}
+              {this.state.error && (
+                <div className="w-full text-left bg-slate-950/80 rounded-xl p-4 border border-slate-800 text-xs font-mono space-y-1.5 overflow-x-auto max-h-40 shadow-inner scrollbar-thin">
+                  <p className="text-rose-405 font-bold">Error: {this.state.error.message}</p>
+                  {this.state.error.stack && (
+                    <pre className="text-[10px] text-zinc-500 select-all leading-normal whitespace-pre-wrap font-sans mt-1">
+                      {this.state.error.stack.split("\n").slice(0, 4).join("\n")}
+                    </pre>
+                  )}
+                </div>
+              )}
 
-            {/* Footer diagnostic tag */}
-            <div className="mt-8 pt-6 border-t border-slate-800/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] font-mono text-slate-500">
-              <span>NEXUS CLOUD OS v2.4.9</span>
-              <span className="text-slate-600">ID: {Math.random().toString(36).substring(2, 9).toUpperCase()}</span>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full justify-center pt-2">
+                <button
+                  type="button"
+                  id="error-boundary-reload"
+                  onClick={this.handleReload}
+                  className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-indigo-600/20 active:scale-98"
+                >
+                  <RefreshCcw size={14} />
+                  Reiniciar Interface
+                </button>
+                <button
+                  type="button"
+                  id="error-boundary-reset-storage"
+                  onClick={this.handleResetStorage}
+                  className="px-5 py-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <Database size={14} />
+                  Restaurar Dados Originais ERP
+                </button>
+              </div>
+
+              <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1">
+                <span>Multi-Tenant Enterprise Console</span>
+                <span>•</span>
+                <span>v3.4.1</span>
+              </div>
             </div>
           </div>
         </div>

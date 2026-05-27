@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import {
   Shield,
   Fingerprint,
-  Lock,
+  Lock as LucideLock,
   Globe,
   Settings,
   EyeOff,
@@ -152,7 +152,7 @@ export default function SegurancaSection({
               {/* Encryption state banner */}
               <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50/20 flex items-center justify-between gap-3">
                 <div className="flex items-start gap-2.5">
-                  <Lock size={20} className="text-indigo-650 shrink-0 mt-0.5" />
+                  <LucideLock size={20} className="text-indigo-650 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-black text-slate-905">Criptografia RSA-2045 Ativa em Banco de Dados</h5>
                     <p className="text-[10px] text-zinc-500 mt-1">Todos os holerites, folhas de ponto e demonstrativos contábeis são hash-criptografados na camada física.</p>

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Kanban,
   Target,
@@ -36,6 +36,49 @@ export default function ComercialSection({
   onAddLeadNota
 }: ComercialSectionProps) {
   const [activeTab, setActiveTab] = useState<"crm" | "propostas" | "metas" | "performance">("crm");
+
+  // Multi-select state for CRM pipeline leads
+  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
+
+  // Clear selection if company context switches
+  useEffect(() => {
+    setSelectedLeadIds([]);
+  }, [empresaId]);
+
+  // Toggle selection for a single lead
+  const handleToggleSelectLead = (id: string) => {
+    setSelectedLeadIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Check if all leads in a column are selected
+  const isAllColumnSelected = (ids: string[]) => {
+    if (ids.length === 0) return false;
+    return ids.every((id) => selectedLeadIds.includes(id));
+  };
+
+  // Toggle select all leads in a column
+  const handleToggleSelectAllColumn = (ids: string[]) => {
+    if (isAllColumnSelected(ids)) {
+      // Remove all of these column IDs
+      setSelectedLeadIds((prev) => prev.filter((id) => !ids.includes(id)));
+    } else {
+      // Add missing column IDs
+      setSelectedLeadIds((prev) => {
+        const toAdd = ids.filter((id) => !prev.includes(id));
+        return [...prev, ...toAdd];
+      });
+    }
+  };
+
+  // Bulk move selected leads to target stage
+  const handleBulkMoveLeads = (targetEstagio: "Prospecção" | "Contato" | "Proposta" | "Negociação" | "Fechado") => {
+    selectedLeadIds.forEach((id) => {
+      onUpdateLeadEstagio(id, targetEstagio);
+    });
+    setSelectedLeadIds([]);
+  };
 
   const companyLeads = leads.filter((l) => l.empresaId === empresaId);
 
@@ -96,63 +139,65 @@ export default function ComercialSection({
     .reduce((sum, item) => sum + item.valorEstimado, 0);
 
   const metaGlobalBrl = 300000;
-  const percentMeta = (totalFechadoBrl / metaGlobalBrl) * 105;
+  const percentMeta = (totalFechadoBrl / metaGlobalBrl) * 100;
 
   return (
-    <div id="comercial-section" className="space-y-6">
+    <div id="comercial-section" className="space-y-6 text-slate-800 dark:text-slate-100 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Módulo de CRM & Pipeline de Vendas</h2>
-          <p className="text-xs text-slate-500">Pipeline de leads, metas de vendas, gerador de propostas contratuais e comissões integradas em tempo real.</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Módulo de CRM & Pipeline de Vendas</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Pipeline de leads, metas de vendas, gerador de propostas contratuais e comissões integradas em tempo real.</p>
         </div>
       </div>
 
       {/* Comercial quick KPI dials */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-sans text-xs">
-        <div className="p-4 bg-white rounded-xl border border-slate-100 shadow-2xs flex items-center justify-between">
+        <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 transition duration-200">
           <div>
-            <span className="text-slate-400">Giro Total em Pipeline</span>
-            <p className="text-lg font-black text-indigo-700 mt-1 font-mono">
+            <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px] block">Giro Total em Pipeline</span>
+            <p className="text-lg font-black text-indigo-750 dark:text-violet-400 mt-1 font-mono">
               R$ {totalPipelineBrl.toLocaleString("pt-BR")},00
             </p>
           </div>
-          <span className="p-2 bg-indigo-50 text-indigo-650 rounded-lg">
+          <span className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-650 dark:text-indigo-400 rounded-xl">
             <Layers size={18} />
           </span>
         </div>
 
-        <div className="p-4 bg-white rounded-xl border border-slate-100 shadow-2xs flex items-center justify-between">
+        <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 transition duration-200">
           <div>
-            <span className="text-slate-400">Total Vendas Fechadas</span>
-            <p className="text-lg font-black text-emerald-600 mt-1 font-mono">
+            <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px] block">Total Vendas Fechadas</span>
+            <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 font-mono">
               R$ {totalFechadoBrl.toLocaleString("pt-BR")},00
             </p>
           </div>
-          <span className="p-2 bg-emerald-50 text-emerald-650 rounded-lg">
+          <span className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 rounded-xl">
             <TrendingUp size={18} />
           </span>
         </div>
 
-        <div className="p-4 bg-white rounded-xl border border-slate-100 shadow-2xs flex items-center justify-between">
+        <div className="p-4 bg-white/70 dark:bg-[#111827]/75 border border-slate-200/80 dark:border-white/5 rounded-2xl flex items-center justify-between shadow-xs hover:border-violet-500/25 transition duration-200">
           <div className="grow space-y-1">
-            <span className="text-slate-400">Atingimento de Metas</span>
-            <p className="text-lg font-black mt-1 text-slate-900">
-              {percentMeta.toFixed(1)}% <span className="text-[10px] text-slate-450 font-normal">de R$ 300k</span>
+            <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px] block">Atingimento de Metas</span>
+            <p className="text-lg font-black mt-1 text-slate-900 dark:text-white">
+              {percentMeta.toFixed(1)}% <span className="text-[10px] text-slate-450 dark:text-slate-500 font-normal">de R$ 300k</span>
             </p>
           </div>
-          <span className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+          <span className="p-2 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl">
             <Target size={18} />
           </span>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+      <div className="bg-white/70 dark:bg-[#111827]/70 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-xs overflow-hidden">
         {/* Nav Header */}
-        <div className="flex border-b border-slate-101 bg-slate-50/50 p-2 gap-2">
+        <div className="flex border-b border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/40 p-2 gap-2">
           <button
             onClick={() => setActiveTab("crm")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
-              activeTab === "crm" ? "bg-slate-900 text-white shadow-xs" : "text-slate-600 hover:bg-slate-100"
+            className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition ${
+              activeTab === "crm" 
+                ? "purple-metallic-gradient text-white purple-metallic-glow font-black shadow-xs" 
+                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
             }`}
           >
             <Kanban size={14} /> Pipeline CRM Kanban
@@ -193,43 +238,116 @@ export default function ComercialSection({
                   <p className="text-[10px] text-zinc-550">Mova os leads para acelerar os fechamentos orçamentários.</p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowLeadModal(true)}
-                  className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl inline-flex items-center gap-1 transition cursor-pointer"
+                  className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl inline-flex items-center gap-1 transition cursor-pointer shadow-xs"
                 >
                   <Plus size={14} /> Novo lead CRM
                 </button>
               </div>
 
+              {/* Multi-Select Toolbar */}
+              {selectedLeadIds.length > 0 && (
+                <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-900 text-white p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-indigo-500/30 animate-fade-in shadow-md">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-indigo-500/20 text-indigo-300 rounded-lg">
+                      <Layers size={18} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-white">{selectedLeadIds.length} lead(s) selecionado(s)</p>
+                      <p className="text-[10px] text-indigo-200">Defina uma ação conjunta para alterar o estágio operacional dessas contas simultaneamente.</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-200">Mover para:</span>
+                      <select
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            handleBulkMoveLeads(e.target.value as any);
+                          }
+                        }}
+                        defaultValue=""
+                        className="p-2 bg-slate-950 border border-indigo-500/40 rounded-xl text-xs text-indigo-100 font-bold focus:ring-1 focus:ring-indigo-400 outline-none cursor-pointer"
+                      >
+                        <option value="" disabled>-- Escolha o Estágio --</option>
+                        {estagios.map((est) => (
+                          <option key={est} value={est} className="bg-slate-905 text-neutral-800">
+                            {est}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedLeadIds([])}
+                      className="px-3 py-2 bg-white/10 hover:bg-white/20 text-indigo-100 hover:text-white rounded-xl text-xs font-bold transition cursor-pointer"
+                    >
+                      Limpar Seleção
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Kanban Grid */}
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 overflow-x-auto min-w-[900px] h-96 items-start pb-4">
                 {estagios.map((est) => {
                   const estLeads = companyLeads.filter((l) => l.estagio === est);
+                  const isAllSelected = isAllColumnSelected(estLeads.map(l => l.id));
                   return (
                     <div key={est} className="bg-slate-50 border border-slate-150 p-3 rounded-2xl space-y-3 h-full overflow-y-auto">
                       <div className="flex justify-between items-center px-1 font-sans">
-                        <span className="font-extrabold text-[10px] text-slate-600 uppercase tracking-wider">{est}</span>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-extrabold text-[10px] text-slate-600 uppercase tracking-wider">{est}</span>
+                          {estLeads.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleToggleSelectAllColumn(estLeads.map(l => l.id))}
+                              className="text-[9px] text-indigo-600 font-bold hover:underline cursor-pointer text-left"
+                            >
+                              {isAllSelected ? "Deselecionar col." : "Selecionar col."}
+                            </button>
+                          )}
+                        </div>
                         <span className="bg-slate-200 text-slate-805 text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold">
                           {estLeads.length}
                         </span>
                       </div>
 
                       <div className="space-y-2">
-                        {estLeads.map((ld) => (
-                          <div
-                            key={ld.id}
-                            onClick={() => setSelectedLead(ld)}
-                            className="p-3 bg-white border border-slate-100 rounded-xl space-y-1 shadow-2xs hover:border-indigo-400 cursor-pointer transition select-none"
-                          >
-                            <h5 className="font-black text-slate-800 text-xs leading-none">{ld.clienteNome}</h5>
-                            <p className="text-[10px] text-indigo-750 font-bold font-mono">
-                              R$ {ld.valorEstimado.toLocaleString("pt-BR")}
-                            </p>
-                            <div className="flex justify-between items-center pt-2 text-[8px] text-slate-400 border-t border-slate-50 font-sans">
-                              <span>Saber mais</span>
-                              <span>Resp: {ld.vendedorNome.split(" ")[0]}</span>
+                        {estLeads.map((ld) => {
+                          const isSelected = selectedLeadIds.includes(ld.id);
+                          return (
+                            <div
+                              key={ld.id}
+                              onClick={() => setSelectedLead(ld)}
+                              className={`p-3 bg-white border rounded-xl space-y-1 shadow-2xs hover:border-indigo-400 cursor-pointer transition select-none relative ${
+                                isSelected ? "border-indigo-500 bg-indigo-50/10" : "border-slate-100"
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <h5 className="font-black text-slate-800 text-xs leading-none grow">{ld.clienteNome}</h5>
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleSelectLead(ld.id);
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 cursor-pointer accent-indigo-600"
+                                />
+                              </div>
+                              <p className="text-[10px] text-indigo-750 font-bold font-mono">
+                                R$ {ld.valorEstimado.toLocaleString("pt-BR")}
+                              </p>
+                              <div className="flex justify-between items-center pt-2 text-[8px] text-slate-400 border-t border-slate-50 font-sans">
+                                <span>Saber mais</span>
+                                <span>Resp: {ld.vendedorNome.split(" ")[0]}</span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   );

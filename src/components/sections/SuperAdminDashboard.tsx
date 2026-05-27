@@ -11,7 +11,7 @@ import {
   MessageSquare,
   Activity,
   AlertTriangle,
-  Lock,
+  Lock as LucideLock,
   Unlock,
   ShieldAlert,
   Server,
@@ -457,7 +457,7 @@ export default function SuperAdminDashboard({
                                     : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500 hover:text-white"
                                 } cursor-pointer`}
                               >
-                                {emp.status === "Ativo" ? <Lock size={13} /> : <Unlock size={13} />}
+                                {emp.status === "Ativo" ? <LucideLock size={13} /> : <Unlock size={13} />}
                               </button>
                             </div>
                           </td>
