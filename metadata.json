@@ -1,0 +1,6 @@
+{
+  "name": "SaaS ERP Multi-Tenant",
+  "description": "Sistema ERP SaaS completo com arquitetura multiempresa (multi-tenant) e inteligência artificial para o controle comercial, financeiro, industrial e operacional de empresas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
