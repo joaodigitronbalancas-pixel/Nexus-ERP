@@ -87,6 +87,8 @@ import ChatInternoSection from "./components/sections/ChatInternoSection";
 import SuporteSection from "./components/sections/SuporteSection";
 import SegurancaSection from "./components/sections/SegurancaSection";
 import IASection from "./components/sections/IASection";
+import DashboardExecutivoIA from "./components/sections/DashboardExecutivoIA";
+import NexusAICopilot from "./components/NexusAICopilot";
 
 export default function App() {
   // Database States loaded reactively from client LocalStorage
@@ -181,7 +183,7 @@ export default function App() {
   const [authError, setAuthError] = useState("");
 
   // Target Module Menu Selected
-  const [activeClientTab, setActiveClientTab] = useState<string>("Administrativo");
+  const [activeClientTab, setActiveClientTab] = useState<string>("Dashboard Executivo");
 
   // Helper State saving generic action
   const pushAuditLog = (acaoStr: string, specifiedEmpresaId: string | null = null) => {
@@ -1215,7 +1217,7 @@ export default function App() {
                         if (id) {
                           setActiveModeView("CLIENT_SIMULATION");
                           setSimulatedTestLevel("Bypass");
-                          setActiveClientTab("Administrativo");
+                          setActiveClientTab("Dashboard Executivo");
                         } else {
                           setActiveModeView("SA_CONSOLE");
                         }
@@ -1234,6 +1236,22 @@ export default function App() {
                         </div>
                         
                         <div className="space-y-1 text-xs">
+                          {/* Tab: Dashboard Executivo */}
+                          <button
+                            onClick={() => setActiveClientTab("Dashboard Executivo")}
+                            className={`w-full p-2.5 rounded-xl flex items-center justify-between font-extrabold transition cursor-pointer text-left ${
+                              activeClientTab === "Dashboard Executivo"
+                                ? "bg-slate-900 text-white shadow-md"
+                                : "text-indigo-800 bg-indigo-50/40 hover:bg-indigo-50"
+                            }`}
+                          >
+                            <span className="flex items-center gap-2">
+                              <span>👑 Dashboard Executivo IA</span>
+                              <span className="text-[7px] bg-indigo-600 text-white font-mono px-1 rounded animate-pulse">Enterprise</span>
+                            </span>
+                            <ChevronRight size={13} className="opacity-40" />
+                          </button>
+
                           {/* Tab: Administrativo */}
                           {(() => {
                             const acc = getTabAccessStatus("Administrativo");
@@ -1428,6 +1446,15 @@ export default function App() {
 
                       {/* Sub-Components Content Area */}
                       <div className="lg:col-span-3">
+                        {activeClientTab === "Dashboard Executivo" && (
+                          <DashboardExecutivoIA
+                            onAddAuditLog={(msg) => pushAuditLog(msg)}
+                            empresaId={activeCompany?.id || ""}
+                            activeCompany={activeCompany}
+                            virtualUser={virtualUser}
+                          />
+                        )}
+
                         {activeClientTab === "Administrativo" && (() => {
                           const acc = getTabAccessStatus("Administrativo");
                           return acc.allowed ? (
@@ -1573,6 +1600,17 @@ export default function App() {
                     </div>
                   )}
                 </main>
+
+                {loggedInUser && (
+                  <NexusAICopilot
+                    onExecuteCommand={(tab) => {
+                      setActiveClientTab(tab);
+                      pushAuditLog(`Comando executado via Nexus AI Copilot: Abrir módulo [${tab}]`);
+                    }}
+                    activeCompany={activeCompany}
+                    virtualUser={virtualUser}
+                  />
+                )}
 
               </div>
             );
