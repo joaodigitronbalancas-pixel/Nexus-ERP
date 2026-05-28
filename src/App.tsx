@@ -290,9 +290,10 @@ export default function App() {
 
   // Helper State saving generic action
   const pushAuditLog = (acaoStr: string, specifiedEmpresaId: string | null = null) => {
+    const finalEmpresaId = specifiedEmpresaId || activeCompany?.id || loggedInUser?.empresaId || null;
     const newLog: LogAuditoria = {
       id: `log_${Date.now()}`,
-      empresaId: specifiedEmpresaId || activeCompany?.id || loggedInUser?.empresaId || null,
+      empresaId: finalEmpresaId,
       usuarioNome: loggedInUser?.username || "sistema",
       nivel: "INFO",
       acao: acaoStr,
@@ -302,6 +303,23 @@ export default function App() {
     const updated = [newLog, ...auditLogs];
     setAuditLogs(updated);
     saveLocalData("system_logs", updated);
+
+    // Broadcast client telemetry payload straight to active Express server secure buffer
+    fetch("/api/audit/log", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Tenant-ID": finalEmpresaId || "Global",
+        "X-User-Role": loggedInUser?.nivel || "Guest",
+        "X-User-Name": loggedInUser?.username || "Anonymous"
+      },
+      body: JSON.stringify({
+        action: acaoStr,
+        user: loggedInUser?.username || "sistema",
+        level: "INFO",
+        details: { context: "real-time-client-stream" }
+      })
+    }).catch((err) => console.log("Silent telemetry backup operational:", err));
   };
 
   // --- ACTIONS HANDLERS SPECIFIED IN ERP SCHEMAS ---

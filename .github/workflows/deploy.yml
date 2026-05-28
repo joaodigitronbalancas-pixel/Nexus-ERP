@@ -1,0 +1,63 @@
+# Continuous Integration and Cloud Deployment pipeline
+name: Continuous Integration & Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  audit-and-build:
+    name: Build & Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Branch
+        uses: actions/checkout@v4
+
+      - name: Setup Enterprise Node Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-size: '20'
+          cache: 'npm'
+
+      - name: Install Secure Dependencies
+        run: npm ci
+
+      - name: Code Quality & Type Constraint checks
+        run: npm run lint
+
+      - name: Run Webpack & Esbuild Compilation Pipelines
+        run: npm run build
+
+  docker-delivery:
+    name: Container Build & Delivery (Prod)
+    needs: audit-and-build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Branch
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for Multiplatform Builds
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx Builder
+        uses: docker/setup-buildx-action@v3
+
+      - name: Simulate Production AWS/GCP Container Registry login
+        run: |
+          echo "Simulating secure vault login to ghcr.io or gcr.io"
+          echo "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+
+      - name: Build & Tag Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false # Set true after integrating repository credentials
+          tags: |
+            ghcr.io/${{ github.repository }}/nexus-erp:latest
+            ghcr.io/${{ github.repository }}/nexus-erp:${{ github.sha }}
